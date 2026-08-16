@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-// Import รูปภาพ Base64 จากโฟลเดอร์ assets
 import { LOGO_BASE64, ICONS_BASE64 } from './assets';
-
-// Import Custom Hook สำหรับป้องกัน
 import useProtect from './useProtect';
 
 const PACKAGES = [
@@ -118,126 +115,185 @@ function PkgIconImg({ src, alt }) {
 }
 
 export default function App() {
-  // เรียกใช้งาน Hook ป้องกันทั้งหมดในบรรทัดเดียว
   useProtect();
+  
+  // State ควบคุมการเปิด-ปิด Sidebar
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
 
   const totalPackages = PACKAGES.length + TROLLSTORE_PACKAGES.length;
 
   return (
-    <>
-      <div className="hero">
-        <HeroLogoImg src={LOGO_BASE64} alt="F1X3R" />
-        <h1>F1X3R Store</h1>
-        <p>Download Decrypted IPAs & iOS/iPadOS Utility Tools &nbsp;&middot;&nbsp; {totalPackages} packages</p>
-      </div>
-
-      <div className="divider"></div>
-
-      <div className="section-header">
-        <h2>IPA Decrypt</h2>
-        <span className="badge">{PACKAGES.length}</span>
-      </div>
-
-      <div className="pkg-grid">
-        {PACKAGES.map((pkg) => {
-          const iconSrc = ICONS_BASE64 ? ICONS_BASE64[pkg.iconKey] : null;
-
-          const CardContent = (
-            <>
-              <PkgIconImg src={iconSrc} alt={`${pkg.name} icon`} />
-              <div className="pkg-info">
-                <div className="pkg-name">
-                  {pkg.name}
-                  {pkg.server && (
-                    <>
-                      &nbsp;&middot;&nbsp;
-                      <span className="pkg-server-text">{pkg.server}</span>
-                    </>
-                  )}
-                </div>
-                <div className="pkg-version">Version: {pkg.version}</div>
-                <div className="pkg-bundle">Identifier: {pkg.bundle}</div>
-                <div className="pkg-tags">
-                  {pkg.price && <span className="pkg-price">{pkg.price}</span>}
-                  {pkg.type && <span className="pkg-type">{pkg.type}</span>}
-                </div>
-              </div>
-            </>
-          );
-
-          return pkg.downloadUrl ? (
-            <a 
-              key={pkg.id} 
-              href={pkg.downloadUrl} 
-              download 
-              className="pkg-card"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              {CardContent}
+    <div className="app-container">
+      {/* --- SIDEBAR --- */}
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="logo-details">
+          <div className="logo_name">F1X3R Store</div>
+          <i 
+            className={`bx ${isOpen ? 'bx-menu-alt-right' : 'bx-menu'}`} 
+            id="btn" 
+            onClick={toggleSidebar}
+          ></i>
+        </div>
+        <ul className="nav-list">
+          <li>
+            <i className='bx bx-search' onClick={() => setIsOpen(true)}></i>
+            <input type="text" placeholder="Search..." />
+            <span className="tooltip">Search</span>
+          </li>
+          <li>
+            <a href="#dashboard">
+              <i className='bx bx-grid-alt'></i>
+              <span className="links_name">Dashboard</span>
             </a>
-          ) : (
-            <div className="pkg-card" key={pkg.id}>
-              {CardContent}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="section-header">
-        <h2>Tools</h2>
-        <span className="badge">{TROLLSTORE_PACKAGES.length}</span>
-      </div>
-
-      <div className="pkg-grid">
-        {TROLLSTORE_PACKAGES.map((pkg) => {
-          const iconSrc = ICONS_BASE64 ? ICONS_BASE64[pkg.iconKey] : null;
-
-          const CardContent = (
-            <>
-              <PkgIconImg src={iconSrc} alt={`${pkg.name} icon`} />
-              <div className="pkg-info">
-                <div className="pkg-name">
-                  {pkg.name}
-                  {pkg.server && (
-                    <>
-                      &nbsp;&middot;&nbsp;
-                      <span className="pkg-server-text">{pkg.server}</span>
-                    </>
-                  )}
-                </div>
-                <div className="pkg-version">Version: {pkg.version}</div>
-                <div className="pkg-bundle">Identifier: {pkg.bundle}</div>
-                <div className="pkg-tags">
-                  {pkg.price && <span className="pkg-type price-pro">{pkg.price}</span>}
-                  {pkg.type && <span className="pkg-type tool">{pkg.type}</span>}
-                </div>
-              </div>
-            </>
-          );
-
-          return pkg.downloadUrl ? (
-            <a 
-              key={pkg.id} 
-              href={pkg.downloadUrl} 
-              download 
-              className="pkg-card"
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              {CardContent}
+            <span className="tooltip">Dashboard</span>
+          </li>
+          <li>
+            <a href="#ipa">
+              <i className='bx bx-folder'></i>
+              <span className="links_name">IPA Decrypt</span>
             </a>
-          ) : (
-            <div className="pkg-card" key={pkg.id}>
-              {CardContent}
+            <span className="tooltip">IPA Decrypt</span>
+          </li>
+          <li>
+            <a href="#tools">
+              <i className='bx bx-cog'></i>
+              <span className="links_name">Tools</span>
+            </a>
+            <span className="tooltip">Tools</span>
+          </li>
+          <li className="profile">
+            <div className="profile-details">
+              <img src={LOGO_BASE64} alt="profileImg" />
+              <div className="name_job">
+                <div className="name">F1X3R</div>
+                <div className="job">Developer</div>
+              </div>
             </div>
-          );
-        })}
+            <i className='bx bx-log-out' id="log_out"></i>
+          </li>
+        </ul>
       </div>
 
-      <div className="divider"></div>
+      {/* --- MAIN CONTENT SECTION --- */}
+      <div className="home-section">
+        <div className="hero">
+          <HeroLogoImg src={LOGO_BASE64} alt="F1X3R" />
+          <h1>F1X3R Store</h1>
+          <p>Download Decrypted IPAs & iOS/iPadOS Utility Tools &nbsp;&middot;&nbsp; {totalPackages} packages</p>
+        </div>
 
-      <footer>
-        <p>Made with ♡ by <a href="tg://user?id=6105731078">F1X3R</a></p>
-      </footer>
-    </>
+        <div className="divider"></div>
+
+        <div className="section-header" id="ipa">
+          <h2>IPA Decrypt</h2>
+          <span className="badge">{PACKAGES.length}</span>
+        </div>
+
+        <div className="pkg-grid">
+          {PACKAGES.map((pkg) => {
+            const iconSrc = ICONS_BASE64 ? ICONS_BASE64[pkg.iconKey] : null;
+
+            const CardContent = (
+              <>
+                <PkgIconImg src={iconSrc} alt={`${pkg.name} icon`} />
+                <div className="pkg-info">
+                  <div className="pkg-name">
+                    {pkg.name}
+                    {pkg.server && (
+                      <>
+                        &nbsp;&middot;&nbsp;
+                        <span className="pkg-server-text">{pkg.server}</span>
+                      </>
+                    )}
+                  </div>
+                  <div className="pkg-version">Version: {pkg.version}</div>
+                  <div className="pkg-bundle">Identifier: {pkg.bundle}</div>
+                  <div className="pkg-tags">
+                    {pkg.price && <span className="pkg-price">{pkg.price}</span>}
+                    {pkg.type && <span className="pkg-type">{pkg.type}</span>}
+                  </div>
+                </div>
+              </>
+            );
+
+            return pkg.downloadUrl ? (
+              <a 
+                key={pkg.id} 
+                href={pkg.downloadUrl} 
+                download 
+                className="pkg-card"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {CardContent}
+              </a>
+            ) : (
+              <div className="pkg-card" key={pkg.id}>
+                {CardContent}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="section-header" id="tools">
+          <h2>Tools</h2>
+          <span className="badge">{TROLLSTORE_PACKAGES.length}</span>
+        </div>
+
+        <div className="pkg-grid">
+          {TROLLSTORE_PACKAGES.map((pkg) => {
+            const iconSrc = ICONS_BASE64 ? ICONS_BASE64[pkg.iconKey] : null;
+
+            const CardContent = (
+              <>
+                <PkgIconImg src={iconSrc} alt={`${pkg.name} icon`} />
+                <div className="pkg-info">
+                  <div className="pkg-name">
+                    {pkg.name}
+                    {pkg.server && (
+                      <>
+                        &nbsp;&middot;&nbsp;
+                        <span className="pkg-server-text">{pkg.server}</span>
+                      </>
+                    )}
+                  </div>
+                  <div className="pkg-version">Version: {pkg.version}</div>
+                  <div className="pkg-bundle">Identifier: {pkg.bundle}</div>
+                  <div className="pkg-tags">
+                    {pkg.price && <span className="pkg-type price-pro">{pkg.price}</span>}
+                    {pkg.type && <span className="pkg-type tool">{pkg.type}</span>}
+                  </div>
+                </div>
+              </>
+            );
+
+            return pkg.downloadUrl ? (
+              <a 
+                key={pkg.id} 
+                href={pkg.downloadUrl} 
+                download 
+                className="pkg-card"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {CardContent}
+              </a>
+            ) : (
+              <div className="pkg-card" key={pkg.id}>
+                {CardContent}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="divider"></div>
+
+        <footer>
+          <p>Made with ♡ by <a href="tg://user?id=6105731078">F1X3R</a></p>
+        </footer>
+      </div>
+    </div>
   );
 }
