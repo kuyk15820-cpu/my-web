@@ -285,7 +285,7 @@ footer a { color: var(--accent2); text-decoration: none; }
   background-color: var(--surface2);
 }
 
-/* --- SIDEBAR STYLES --- */
+/* --- SIDEBAR STYLES (STANDARD OVERLAY) --- */
 .sidebar {
     position: fixed;
     left: 0;
@@ -294,12 +294,13 @@ footer a { color: var(--accent2); text-decoration: none; }
     width: 78px;
     background: #11101D;
     padding: 6px 14px;
-    z-index: 99;
+    z-index: 999; /* ปรับ z-index ให้สูงขึ้นเพื่อให้ลอยทับทุกส่วน */
     transition: all 0.5s ease;
 }
 
 .sidebar.open {
     width: 250px;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); /* เพิ่มเงาตอนเปิดให้ดูมีมิติ */
 }
 
 .sidebar .logo-details {
@@ -443,7 +444,7 @@ footer a { color: var(--accent2); text-decoration: none; }
     white-space: nowrap;
     pointer-events: none;
     transition: 0s;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .sidebar li:hover .tooltip {
@@ -517,19 +518,18 @@ footer a { color: var(--accent2); text-decoration: none; }
     background: none;
 }
 
-/* --- HOME SECTION ADJUSTMENT --- */
+/* --- MAIN CONTENT (FIXED WIDTH) --- */
 .home-section {
     position: relative;
     min-height: 100vh;
-    top: 0;
-    left: 78px;
-    width: calc(100% - 78px);
-    transition: all 0.5s ease;
-    padding: 20px;
+    padding-left: 98px; /* เว้นระยะถาวรเฉพาะตอน Sidebar ย่อ */
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
+/* ยกเลิกการเปลี่ยนขนาดเนื้อหาเมื่อกดเปิด Sidebar */
 .sidebar.open ~ .home-section {
-    left: 250px;
-    width: calc(100% - 250px);
+    left: 0;
+    width: 100%;
 }
-
