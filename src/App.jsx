@@ -121,14 +121,7 @@ export default function App() {
   // เรียกใช้งาน Hook ป้องกันทั้งหมดในบรรทัดเดียว
   useProtect();
 
-  // State สำหรับเปิด-ปิด Sidebar บนหน้าจอขนาดเล็ก
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const totalPackages = PACKAGES.length + TROLLSTORE_PACKAGES.length;
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(prev => !prev);
-  };
 
   return (
     <>
@@ -137,31 +130,11 @@ export default function App() {
         <a href="#home" className="topbar-brand">
           F1X3R Store
         </a>
-        <button className="topbar-toggle" onClick={toggleSidebar} aria-label="Toggle Menu">
-          ☰
-        </button>
+        <nav className="topbar-nav">
+          <a href="#ipa-decrypt" className="topbar-link">IPA Decrypt</a>
+          <a href="#tools" className="topbar-link">Tools</a>
+        </nav>
       </header>
-
-      {/* ── Sidebar ─────────────────────────────── */}
-      <aside className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <ul className="sidebar-menu">
-          <li>
-            <a href="#home" className="sidebar-item active" onClick={() => setIsSidebarOpen(false)}>
-              หน้าหลัก
-            </a>
-          </li>
-          <li>
-            <a href="#ipa-decrypt" className="sidebar-item" onClick={() => setIsSidebarOpen(false)}>
-              IPA Decrypt
-            </a>
-          </li>
-          <li>
-            <a href="#tools" className="sidebar-item" onClick={() => setIsSidebarOpen(false)}>
-              Tools
-            </a>
-          </li>
-        </ul>
-      </aside>
 
       {/* ── Main Content Area ───────────────────── */}
       <main className="main-content">
