@@ -121,7 +121,12 @@ export default function App() {
   // เรียกใช้งาน Hook ป้องกันทั้งหมดในบรรทัดเดียว
   useProtect();
 
+  // State สำหรับควบคุมการเปิด-ปิด Dropdown Menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const totalPackages = PACKAGES.length + TROLLSTORE_PACKAGES.length;
+
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <>
@@ -130,11 +135,31 @@ export default function App() {
         <a href="#home" className="topbar-brand">
           F1X3R Store
         </a>
-        <nav className="topbar-nav">
-          <a href="#ipa-decrypt" className="topbar-link">IPA Decrypt</a>
-          <a href="#tools" className="topbar-link">Tools</a>
-        </nav>
+        <button 
+          className="topbar-menu-btn" 
+          onClick={() => setIsMenuOpen(!isMenuOpen)} 
+          aria-label="Toggle Menu"
+        >
+          ☰
+        </button>
       </header>
+
+      {/* ── Fullscreen Overlay & Dropdown Menu ──── */}
+      {isMenuOpen && (
+        <div className="menu-overlay" onClick={closeMenu}>
+          <div className="mobile-dropdown-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="menu-item header-item">
+              <span>P12 Sharing</span>
+              <button className="close-btn" onClick={closeMenu}>✕</button>
+            </div>
+            <a href="#make-online" className="menu-item" onClick={closeMenu}>Make Online</a>
+            <a href="#sign-online" className="menu-item" onClick={closeMenu}>Sign Online</a>
+            <a href="#get-udid" className="menu-item" onClick={closeMenu}>Get UDID</a>
+            <a href="#basic-key" className="menu-item" onClick={closeMenu}>Basic Key</a>
+            <a href="#donate" className="menu-item donate-btn" onClick={closeMenu}>Donate</a>
+          </div>
+        </div>
+      )}
 
       {/* ── Main Content Area ───────────────────── */}
       <main className="main-content">
