@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+// Import รูปภาพ Base64 จากโฟลเดอร์ assets
 import { LOGO_BASE64, ICONS_BASE64 } from './assets';
+
+// Import Custom Hook สำหรับป้องกัน
 import useProtect from './useProtect';
 
 const PACKAGES = [
@@ -115,72 +118,54 @@ function PkgIconImg({ src, alt }) {
 }
 
 export default function App() {
+  // เรียกใช้งาน Hook ป้องกันทั้งหมดในบรรทัดเดียว
   useProtect();
-  
-  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  // State สำหรับเปิด-ปิด Sidebar บนหน้าจอขนาดเล็ก
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const totalPackages = PACKAGES.length + TROLLSTORE_PACKAGES.length;
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(prev => !prev);
+  };
+
   return (
-    <div className="app-container">
-      {/* --- TOPBAR (ด้านบน: ชื่อซ้าย, ปุ่ม 3 ขีดขวา) --- */}
-      <header className="topbar">
-        <div className="topbar-title">F1X3R Store</div>
-        <i className='bx bx-menu topbar-menu-btn' onClick={toggleSidebar}></i>
+    <>
+      {/* ── Top Bar ─────────────────────────────── */}
+      <header className="app-topbar">
+        <a href="#home" className="topbar-brand">
+          F1X3R Store
+        </a>
+        <button className="topbar-toggle" onClick={toggleSidebar} aria-label="Toggle Menu">
+          ☰
+        </button>
       </header>
 
-      {/* --- OVERLAY ฉากหลังสีดำใสตอนเปิดเมนู --- */}
-      {isOpen && <div className="sidebar-backdrop" onClick={toggleSidebar}></div>}
-
-      {/* --- SIDEBAR DRAWER (จะซ่อนอยู่ ซ้ายสุด จะแสดงเมื่อกดเปิด) --- */}
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="logo-details">
-          <div className="logo_name">F1X3R Store</div>
-          <i className='bx bx-x' id="btn" onClick={toggleSidebar}></i>
-        </div>
-        <ul className="nav-list">
+      {/* ── Sidebar ─────────────────────────────── */}
+      <aside className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <ul className="sidebar-menu">
           <li>
-            <i className='bx bx-search'></i>
-            <input type="text" placeholder="Search..." />
-          </li>
-          <li>
-            <a href="#dashboard" onClick={toggleSidebar}>
-              <i className='bx bx-grid-alt'></i>
-              <span className="links_name">Dashboard</span>
+            <a href="#home" className="sidebar-item active" onClick={() => setIsSidebarOpen(false)}>
+              หน้าหลัก
             </a>
           </li>
           <li>
-            <a href="#ipa" onClick={toggleSidebar}>
-              <i className='bx bx-folder'></i>
-              <span className="links_name">IPA Decrypt</span>
+            <a href="#ipa-decrypt" className="sidebar-item" onClick={() => setIsSidebarOpen(false)}>
+              IPA Decrypt
             </a>
           </li>
           <li>
-            <a href="#tools" onClick={toggleSidebar}>
-              <i className='bx bx-cog'></i>
-              <span className="links_name">Tools</span>
+            <a href="#tools" className="sidebar-item" onClick={() => setIsSidebarOpen(false)}>
+              Tools
             </a>
-          </li>
-          <li className="profile">
-            <div className="profile-details">
-              <img src={LOGO_BASE64} alt="profileImg" />
-              <div className="name_job">
-                <div className="name">F1X3R</div>
-                <div className="job">Developer</div>
-              </div>
-            </div>
-            <i className='bx bx-log-out' id="log_out"></i>
           </li>
         </ul>
       </aside>
 
-      {/* --- MAIN CONTENT SECTION --- */}
-      <main className="home-section">
-        <div className="hero">
+      {/* ── Main Content Area ───────────────────── */}
+      <main className="main-content">
+        <div className="hero" id="home">
           <HeroLogoImg src={LOGO_BASE64} alt="F1X3R" />
           <h1>F1X3R Store</h1>
           <p>Download Decrypted IPAs & iOS/iPadOS Utility Tools &nbsp;&middot;&nbsp; {totalPackages} packages</p>
@@ -188,7 +173,7 @@ export default function App() {
 
         <div className="divider"></div>
 
-        <div className="section-header" id="ipa">
+        <div className="section-header" id="ipa-decrypt">
           <h2>IPA Decrypt</h2>
           <span className="badge">{PACKAGES.length}</span>
         </div>
@@ -294,6 +279,6 @@ export default function App() {
           <p>Made with ♡ by <a href="tg://user?id=6105731078">F1X3R</a></p>
         </footer>
       </main>
-    </div>
+    </>
   );
 }
