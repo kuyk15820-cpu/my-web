@@ -117,7 +117,6 @@ function PkgIconImg({ src, alt }) {
 export default function App() {
   useProtect();
   
-  // State ควบคุมการเปิด-ปิด Sidebar
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -128,42 +127,43 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* --- SIDEBAR --- */}
-      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      {/* --- TOPBAR (ด้านบน: ชื่อซ้าย, ปุ่ม 3 ขีดขวา) --- */}
+      <header className="topbar">
+        <div className="topbar-title">F1X3R Store</div>
+        <i className='bx bx-menu topbar-menu-btn' onClick={toggleSidebar}></i>
+      </header>
+
+      {/* --- OVERLAY ฉากหลังสีดำใสตอนเปิดเมนู --- */}
+      {isOpen && <div className="sidebar-backdrop" onClick={toggleSidebar}></div>}
+
+      {/* --- SIDEBAR DRAWER (จะซ่อนอยู่ ซ้ายสุด จะแสดงเมื่อกดเปิด) --- */}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo-details">
           <div className="logo_name">F1X3R Store</div>
-          <i 
-            className={`bx ${isOpen ? 'bx-menu-alt-right' : 'bx-menu'}`} 
-            id="btn" 
-            onClick={toggleSidebar}
-          ></i>
+          <i className='bx bx-x' id="btn" onClick={toggleSidebar}></i>
         </div>
         <ul className="nav-list">
           <li>
-            <i className='bx bx-search' onClick={() => setIsOpen(true)}></i>
+            <i className='bx bx-search'></i>
             <input type="text" placeholder="Search..." />
-            <span className="tooltip">Search</span>
           </li>
           <li>
-            <a href="#dashboard">
+            <a href="#dashboard" onClick={toggleSidebar}>
               <i className='bx bx-grid-alt'></i>
               <span className="links_name">Dashboard</span>
             </a>
-            <span className="tooltip">Dashboard</span>
           </li>
           <li>
-            <a href="#ipa">
+            <a href="#ipa" onClick={toggleSidebar}>
               <i className='bx bx-folder'></i>
               <span className="links_name">IPA Decrypt</span>
             </a>
-            <span className="tooltip">IPA Decrypt</span>
           </li>
           <li>
-            <a href="#tools">
+            <a href="#tools" onClick={toggleSidebar}>
               <i className='bx bx-cog'></i>
               <span className="links_name">Tools</span>
             </a>
-            <span className="tooltip">Tools</span>
           </li>
           <li className="profile">
             <div className="profile-details">
@@ -176,10 +176,10 @@ export default function App() {
             <i className='bx bx-log-out' id="log_out"></i>
           </li>
         </ul>
-      </div>
+      </aside>
 
       {/* --- MAIN CONTENT SECTION --- */}
-      <div className="home-section">
+      <main className="home-section">
         <div className="hero">
           <HeroLogoImg src={LOGO_BASE64} alt="F1X3R" />
           <h1>F1X3R Store</h1>
@@ -293,7 +293,7 @@ export default function App() {
         <footer>
           <p>Made with ♡ by <a href="tg://user?id=6105731078">F1X3R</a></p>
         </footer>
-      </div>
+      </main>
     </div>
   );
 }
